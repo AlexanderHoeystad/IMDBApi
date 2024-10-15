@@ -50,18 +50,9 @@ namespace IMDBApi.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public ActionResult<Name> Post([FromBody] Name name)
         {
-            if (name == null)
-            {
-                return BadRequest();
-            }
-
             var newName = _nameRepo.AddName(name);
-            if (newName == null)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Error creating the new name.");
-            }
+            return CreatedAtAction(nameof(Get), new { nconst = newName.Nconst }, newName);
 
-            return CreatedAtAction(nameof(Get), new { id = newName.Nconst }, newName);
         }
 
         // PUT api/<TempController>/5

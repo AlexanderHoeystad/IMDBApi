@@ -53,7 +53,7 @@ namespace IMDBApi.Controllers
         public ActionResult<Title> Post([FromBody] Title title)
         {
             var newTitle = _titleRepo.AddTitle(title);
-            return CreatedAtAction(nameof(Get), new { id = newTitle.Tconst }, newTitle);
+            return CreatedAtAction(nameof(Get), new { tconst = newTitle.Tconst }, newTitle);
 
 
         }
