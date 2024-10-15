@@ -32,7 +32,7 @@ namespace IMDBApi.Controllers
         }
 
         // GET api/<TempController>/5
-        [HttpGet("{id}")]
+        [HttpGet("{tconst}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult<Title> Get(string tconst)
@@ -59,7 +59,7 @@ namespace IMDBApi.Controllers
         }
 
         // PUT api/<TempController>/5
-        [HttpPut("{id}")]
+        [HttpPut("{tconst}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -78,7 +78,7 @@ namespace IMDBApi.Controllers
         }
 
         // DELETE api/<TempController>/5
-        [HttpDelete("{id}")]
+        [HttpDelete("{tconst}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public ActionResult<Title?> Delete(string tconst)
