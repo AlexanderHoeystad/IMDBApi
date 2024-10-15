@@ -3,81 +3,98 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace IMDBApi.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class NameController : Controller
     {
-        // GET: NameController
-        public ActionResult Index()
+        private NameRepo _nameRepo;
+
+        public NameController(NameRepo nameRepo)
         {
-            return View();
+            _nameRepo = nameRepo;
         }
 
-        // GET: NameController/Details/5
-        public ActionResult Details(int id)
+        // GET: api/<TempController>
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public ActionResult<IEnumerable<Name>> GetAll([FromQuery] string? orderBy = null)
         {
-            return View();
+            var names = _nameRepo.GetNameList(orderBy);
+            if (names == null)
+            {
+                return NoContent();
+            }
+            return Ok(names);
+
         }
 
-        // GET: NameController/Create
-        public ActionResult Create()
+        // GET api/<TempController>/5
+        [HttpGet("{nconst}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public ActionResult<Name> Get(string nconst)
         {
-            return View();
+            var name = _nameRepo.GetName(nconst);
+            if (name == null)
+            {
+                return NotFound();
+            }
+            return Ok(name);
         }
 
-        // POST: NameController/Create
+        // POST api/<NameController>
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public ActionResult<Name> Post([FromBody] Name name)
         {
-            try
+            if (name == null)
             {
-                return RedirectToAction(nameof(Index));
+                return BadRequest();
             }
-            catch
+
+            var newName = _nameRepo.AddName(name);
+            if (newName == null)
             {
-                return View();
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error creating the new name.");
             }
+
+            return CreatedAtAction(nameof(Get), new { id = newName.Nconst }, newName);
         }
 
-        // GET: NameController/Edit/5
-        public ActionResult Edit(int id)
+        // PUT api/<TempController>/5
+        [HttpPut("{nconst}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+
+        public ActionResult<Name> Put(string nconst, [FromBody] Name name)
         {
-            return View();
+            var existingName = _nameRepo.GetName(nconst);
+            if (existingName == null)
+            {
+                return NotFound();
+            }
+            var updatedName = _nameRepo.UpdateName(nconst, name);
+            return Ok(updatedName);
+
         }
 
-        // POST: NameController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        // DELETE api/<TempController>/5
+        [HttpDelete("{nconst}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public ActionResult<Name?> Delete(string nconst)
         {
-            try
+            var name = _nameRepo.Delete(nconst);
+            if (name == null)
             {
-                return RedirectToAction(nameof(Index));
+                return NoContent();
             }
-            catch
-            {
-                return View();
-            }
-        }
+            return Ok(name);
 
-        // GET: NameController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: NameController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
         }
     }
 }

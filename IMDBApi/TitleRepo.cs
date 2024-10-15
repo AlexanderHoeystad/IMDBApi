@@ -4,14 +4,14 @@ namespace IMDBApi
 {
     public class TitleRepo
     {
-        private int _nextId = 6;
+        private int _nextTconst = 6;
         private List<Title> _titles = new List<Title>
         {
-              new Title { Tconst = "tt0012349", TitleType = "movie", PrimaryTitle = "The Kid", OriginalTitle = "The Kid", IsAdult = false, StartYear = 1921, EndYear = null, RuntimeMinutes = 68, GenreID = 1, Genre = "Comedy" },
-              new Title { Tconst = "tt0068646", TitleType = "movie", PrimaryTitle = "The Godfather", OriginalTitle = "The Godfather", IsAdult = false, StartYear = 1972, EndYear = null, RuntimeMinutes = 175, GenreID = 2, Genre = "Crime" },
-              new Title { Tconst = "tt0468569", TitleType = "movie", PrimaryTitle = "The Dark Knight", OriginalTitle = "The Dark Knight", IsAdult = false, StartYear = 2008, EndYear = null, RuntimeMinutes = 152, GenreID = 3, Genre = "Action" },
-              new Title { Tconst = "tt0109830", TitleType = "movie", PrimaryTitle = "Forrest Gump", OriginalTitle = "Forrest Gump", IsAdult = false, StartYear = 1994, EndYear = null, RuntimeMinutes = 142, GenreID = 4, Genre = "Drama" },
-              new Title { Tconst = "tt0120338", TitleType = "movie", PrimaryTitle = "Titanic", OriginalTitle = "Titanic", IsAdult = false, StartYear = 1997, EndYear = null, RuntimeMinutes = 195, GenreID = 5, Genre = "Romance" }
+              new Title { Tconst = "tt0000001", TitleType = "movie", PrimaryTitle = "The Kid", OriginalTitle = "The Kid", IsAdult = false, StartYear = 1921, EndYear = null, RuntimeMinutes = 68, GenreID = 1, Genre = "Comedy" },
+              new Title { Tconst = "tt0000002", TitleType = "movie", PrimaryTitle = "The Godfather", OriginalTitle = "The Godfather", IsAdult = false, StartYear = 1972, EndYear = null, RuntimeMinutes = 175, GenreID = 2, Genre = "Crime" },
+              new Title { Tconst = "tt0000003", TitleType = "movie", PrimaryTitle = "The Dark Knight", OriginalTitle = "The Dark Knight", IsAdult = false, StartYear = 2008, EndYear = null, RuntimeMinutes = 152, GenreID = 3, Genre = "Action" },
+              new Title { Tconst = "tt0000004", TitleType = "movie", PrimaryTitle = "Forrest Gump", OriginalTitle = "Forrest Gump", IsAdult = false, StartYear = 1994, EndYear = null, RuntimeMinutes = 142, GenreID = 4, Genre = "Drama" },
+              new Title { Tconst = "tt0000005", TitleType = "movie", PrimaryTitle = "Titanic", OriginalTitle = "Titanic", IsAdult = false, StartYear = 1997, EndYear = null, RuntimeMinutes = 195, GenreID = 5, Genre = "Romance" }
         };
 
         public IEnumerable<Title> GetTitleList(string? orderby = null)
@@ -57,7 +57,7 @@ namespace IMDBApi
 
         public Title AddTitle(Title title)
         {
-            title.Tconst = $"tt{_nextId++}";
+            title.Tconst = $"tt{_nextTconst++}";
             _titles.Add(title);
             return title;
         }

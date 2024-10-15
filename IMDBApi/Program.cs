@@ -21,6 +21,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddSingleton<TitleRepo>();
+builder.Services.AddSingleton<NameRepo>();
 
 var app = builder.Build();
 
