@@ -1,6 +1,6 @@
 ﻿namespace IMDBApi
 {
-    public class CrewRepo
+    public class CrewRepo : ICrewRepo
     {
         private int _nextTconst = 6;
         private List<Crew> _crews = new List<Crew>

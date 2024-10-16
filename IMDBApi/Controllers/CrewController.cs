@@ -7,9 +7,10 @@ namespace IMDBApi.Controllers
     [ApiController]
     public class CrewController : Controller
     {
-        private CrewRepo _crewRepo;
+        //private CrewRepo _crewRepo;
+        private CrewRepoDB _crewRepo;
 
-        public CrewController(CrewRepo crewRepo)
+        public CrewController(CrewRepoDB crewRepo)
         {
             _crewRepo = crewRepo;
         }
