@@ -17,7 +17,9 @@ namespace IMDBApi
             {
                 entity.HasKey(e => e.Nconst); // Specify primary key
                 entity.ToView("getPerson"); // Map to the Persons table
-              
+                entity.Property(e => e.PrimaryProfession).HasColumnName("primaryProfession"); // Map additional fields if needed
+                entity.Property(e => e.KnownForTitles).HasColumnName("knownForTitles");
+
             });
             modelBuilder.Entity<Title>(entity =>
             {

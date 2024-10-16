@@ -1,7 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.SignalR;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 
 namespace IMDBApi
 {
+
     public class NameRepoDB : INameRepo
     {
         private readonly IMDBDbContext _context;
@@ -11,77 +14,77 @@ namespace IMDBApi
             _context = context;
         }
 
-        // Get list of names with optional ordering
+        // Get a list of Names with optional ordering
         public IEnumerable<Name> GetNameList(string? orderby = null)
         {
-            IQueryable<Name> query = _context.Names;
+            var query = _context.Names.AsQueryable();
 
             // Apply ordering if specified
             if (!string.IsNullOrEmpty(orderby))
             {
-                switch (orderby.ToLower())
+                query = orderby switch
                 {
-                    case "primaryname":
-                        query = query.OrderBy(n => n.PrimaryName);
-                        break;
-                    case "birthyear":
-                        query = query.OrderBy(n => n.BirthYear);
-                        break;
-                    case "deathyear":
-                        query = query.OrderBy(n => n.DeathYear);
-                        break;
-                    default:
-                        break;
-                }
+                    "name" => query.OrderBy(n => n.PrimaryName),
+                    _ => query
+                };
             }
 
-            return query.ToList(); // Return the list of names
+            return query.ToList();
         }
 
-        // Add a new name
+        // Add a new Name - note that this assumes you have an appropriate stored procedure
         public Name AddName(Name name)
         {
-            _context.Names.Add(name);
-            _context.SaveChanges(); // Save changes to the database
-            return name; // Return the added name
+            // Call stored procedure to add a name
+            _context.Database.ExecuteSqlRaw("EXEC AddPerson @Nconst, @PrimaryName, @BirthYear, @DeathYear",
+                new SqlParameter("@Nconst", name.Nconst),
+                new SqlParameter("@PrimaryName", name.PrimaryName),
+                new SqlParameter("@BirthYear", name.BirthYear ?? (object)DBNull.Value),
+                new SqlParameter("@DeathYear", name.DeathYear ?? (object)DBNull.Value));
+
+            return name; // Return the created name
         }
 
-        // Delete a name by Nconst
-        public Name? Delete(string nconst)
-        {
-            var name = _context.Names.Find(nconst);
-            if (name == null)
-            {
-                return null; // Name not found
-            }
-
-            _context.Names.Remove(name);
-            _context.SaveChanges(); // Save changes to the database
-            return name; // Return the deleted name
-        }
-
-        // Get a name by Nconst
+        // Get a specific Name by Nconst
         public Name? GetName(string nconst)
         {
-            return _context.Names.Find(nconst); // Fetch the name by Nconst
+            return _context.Names
+                .FromSqlRaw("EXEC GetNameByNconst @Nconst", new SqlParameter("@Nconst", nconst))
+                .AsEnumerable()
+                .FirstOrDefault();
         }
 
-        // Update an existing name
+
+        // Update an existing Name
         public Name? UpdateName(string nconst, Name name)
         {
-            if (nconst != name.Nconst)
-            {
-                return null; // Nconst mismatch
-            }
+            // Call stored procedure to update the name
+            _context.Database.ExecuteSqlRaw("EXEC UpdatePerson @Nconst, @PrimaryName, @BirthYear, @DeathYear",
+                new SqlParameter("@Nconst", nconst),
+                new SqlParameter("@PrimaryName", name.PrimaryName),
+                new SqlParameter("@BirthYear", name.BirthYear ?? (object)DBNull.Value),
+                new SqlParameter("@DeathYear", name.DeathYear ?? (object)DBNull.Value));
 
-            _context.Names.Update(name);
-            _context.SaveChanges(); // Save changes to the database
-            return name; // Return the updated name
+            return name; // Return updated name
         }
 
+        // Delete a Name by Nconst
+        public Name? Delete(string nconst)
+        {
+            var name = GetName(nconst); // Get the existing name before deleting
+            if (name != null)
+            {
+                // Call stored procedure to delete the name
+                _context.Database.ExecuteSqlRaw("EXEC DeletePerson @Nconst", new SqlParameter("@Nconst", nconst));
+            }
+            return name; // Return the deleted name or null if it was not found
+        }
+
+        // Search for Names using a search term
         public IEnumerable<Name> SearchPerson(string searchTerm)
         {
-            return _context.Names.FromSqlRaw("EXEC SearchPerson @searchTerm = {0}", searchTerm).ToList();
+            return _context.Names.FromSqlRaw("EXEC SearchPersons @searchTerm", new SqlParameter("@searchTerm", searchTerm)).ToList();
         }
     }
+
 }
