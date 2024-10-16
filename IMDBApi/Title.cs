@@ -13,6 +13,7 @@ namespace IMDBApi
         public int? StartYear { get; set; }
         public int? EndYear { get; set; }
         public int? RuntimeMinutes { get; set; }
+        public string? Genres { get; set; }
         
     }
 
