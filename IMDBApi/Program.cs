@@ -29,6 +29,7 @@ builder.Services.AddScoped<TitleRepoDB>();
 builder.Services.AddScoped<NameRepo>();
 builder.Services.AddScoped<CrewRepoDB>();
 
+
 builder.Services.AddDbContext<IMDBDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("IMDBDbContext"));
