@@ -7,9 +7,9 @@ namespace IMDBApi.Controllers
     [ApiController]
     public class TitleController : Controller
     {
-        private TitleRepo _titleRepo;
+        private TitleRepoDB _titleRepo;
 
-        public TitleController(TitleRepo titleRepo)
+        public TitleController(TitleRepoDB titleRepo)
         {
             _titleRepo = titleRepo;
         }
