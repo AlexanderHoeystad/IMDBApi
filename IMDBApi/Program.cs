@@ -27,7 +27,6 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<TitleRepoDB>();
 builder.Services.AddScoped<NameRepoDB>();
-builder.Services.AddScoped<INameRepo,NameRepoDB>();
 builder.Services.AddScoped<CrewRepoDB>();
 
 
