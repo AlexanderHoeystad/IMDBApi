@@ -1,4 +1,6 @@
-﻿namespace IMDBApi
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace IMDBApi
 {
     public class TitleRepoDB : ITitleRepo
     {
@@ -69,7 +71,12 @@
                 _context.SaveChanges();
             }
             return existingTitle;
-        }   
+        }
+
+        public IEnumerable<Title> SearchTitle(string searchTerm)
+        {
+            return _context.Titles.FromSqlRaw("EXEC SearchTitle @searchTerm = {0}", searchTerm).ToList();
+        }
 
     }
 }

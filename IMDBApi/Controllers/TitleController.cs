@@ -93,6 +93,13 @@ namespace IMDBApi.Controllers
 
         }
 
+        [HttpGet("search")]
+        public ActionResult<IEnumerable<Title>> SearchTitle(string searchTerm)
+        {
+            var results = _titleRepo.SearchTitle(searchTerm);
+            return Ok(results);
+        }
+
 
     }
 }

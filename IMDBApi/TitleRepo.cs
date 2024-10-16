@@ -86,6 +86,9 @@ namespace IMDBApi
             return existingTitle;
         }
 
-
+        public IEnumerable<Title> SearchTitle(string searchTerm)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

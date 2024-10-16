@@ -17,6 +17,7 @@ namespace IMDBApi
             {
                 entity.HasKey(e => e.Nconst); // Specify primary key
                 entity.ToView("getPerson"); // Map to the Persons table
+                entity.ToView("getTitles"); // Map to the Titles table
             });
 
             base.OnModelCreating(modelBuilder);
