@@ -2,7 +2,7 @@
 
 namespace IMDBApi
 {
-    public class TitleRepo
+    public class TitleRepo : ITitleRepo
     {
         private int _nextTconst = 6;
         private List<Title> _titles = new List<Title>
@@ -45,7 +45,7 @@ namespace IMDBApi
                     default:
                         break;
                 }
-                
+
             }
             return result;
         }
