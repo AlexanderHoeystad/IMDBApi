@@ -25,14 +25,15 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddScoped<TitleRepoDB>();
-builder.Services.AddScoped<NameRepo>();
-builder.Services.AddScoped<CrewRepoDB>();
+//builder.Services.AddScoped<TitleRepoDB>();
+builder.Services.AddScoped<NameRepoDB>();
+builder.Services.AddScoped<INameRepo,NameRepoDB>();
+//builder.Services.AddScoped<CrewRepoDB>();
 
 
-builder.Services.AddDbContext<IMDBDbContext>(options =>
+builder.Services.AddDbContext<ImdbContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("IMDBDbContext"));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("IMDB"));
 });
 
 var app = builder.Build();

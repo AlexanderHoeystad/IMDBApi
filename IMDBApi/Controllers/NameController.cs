@@ -7,85 +7,71 @@ namespace IMDBApi.Controllers
     [ApiController]
     public class NameController : Controller
     {
-        private NameRepo _nameRepo;
+        private readonly NameRepoDB _nameRepo;
 
-        public NameController(NameRepo nameRepo)
+        public NameController(NameRepoDB nameRepo)
         {
             _nameRepo = nameRepo;
         }
 
-        // GET: api/<TempController>
+        // GET: api/names
         [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult<IEnumerable<Name>> GetAll([FromQuery] string? orderBy = null)
+        public ActionResult<IEnumerable<Name>> GetNames(string? orderby = null)
         {
-            var names = _nameRepo.GetNameList(orderBy);
-            if (names == null)
-            {
-                return NoContent();
-            }
+            var names = _nameRepo.GetNameList(orderby);
             return Ok(names);
-
         }
 
-        // GET api/<TempController>/5
+        // GET: api/names/{nconst}
         [HttpGet("{nconst}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult<Name> Get(string nconst)
+        public ActionResult<Name> GetName(string nconst)
         {
             var name = _nameRepo.GetName(nconst);
             if (name == null)
             {
-                return NotFound();
+                return NotFound(); // Return 404 if not found
             }
             return Ok(name);
         }
 
-        // POST api/<NameController>
+        // POST: api/names
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult<Name> Post([FromBody] Name name)
+        public ActionResult<Name> CreateName(Name name)
         {
-            var newName = _nameRepo.AddName(name);
-            return CreatedAtAction(nameof(Get), new { nconst = newName.Nconst }, newName);
-
+            var createdName = _nameRepo.AddName(name);
+            return CreatedAtAction(nameof(GetName), new { nconst = createdName.Nconst }, createdName);
         }
 
-        // PUT api/<TempController>/5
+        // PUT: api/names/{nconst}
         [HttpPut("{nconst}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-
-        public ActionResult<Name> Put(string nconst, [FromBody] Name name)
+        public ActionResult<Name> UpdateName(string nconst, Name name)
         {
-            var existingName = _nameRepo.GetName(nconst);
-            if (existingName == null)
-            {
-                return NotFound();
-            }
             var updatedName = _nameRepo.UpdateName(nconst, name);
-            return Ok(updatedName);
-
-        }
-
-        // DELETE api/<TempController>/5
-        [HttpDelete("{nconst}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public ActionResult<Name?> Delete(string nconst)
-        {
-            var name = _nameRepo.Delete(nconst);
-            if (name == null)
+            if (updatedName == null)
             {
-                return NoContent();
+                return BadRequest(); // Return 400 if Nconst doesn't match
             }
-            return Ok(name);
-
+            return NoContent(); // Return 204 No Content for a successful update
         }
+
+        // DELETE: api/names/{nconst}
+        [HttpDelete("{nconst}")]
+        public ActionResult<Name> DeleteName(string nconst)
+        {
+            var deletedName = _nameRepo.Delete(nconst);
+            if (deletedName == null)
+            {
+                return NotFound(); // Return 404 if not found
+            }
+            return Ok(deletedName); // Return the deleted name
+        }
+
+        [HttpGet("search")]
+        public ActionResult<IEnumerable<Name>> SearchPersons(string searchTerm)
+        {
+            var results = _nameRepo.SearchPersons(searchTerm);
+            return Ok(results);
+        }
+
     }
 }
