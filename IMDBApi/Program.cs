@@ -22,6 +22,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddSingleton<TitleRepo>();
 builder.Services.AddSingleton<NameRepo>();
+builder.Services.AddSingleton<CrewRepo>();
 
 var app = builder.Build();
 
