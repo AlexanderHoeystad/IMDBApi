@@ -8,6 +8,6 @@ namespace IMDBApi
         Name? Delete(string nconst);
         Name? GetName(string nconst);
         Name? UpdateName(string nconst, Name name);
-        IEnumerable<Name> SearchPersons(string searchTerm);
+        IEnumerable<Name> SearchPerson(string searchTerm);
     }
 }

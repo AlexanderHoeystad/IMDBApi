@@ -79,9 +79,9 @@ namespace IMDBApi
             return name; // Return the updated name
         }
 
-        public IEnumerable<Name> SearchPersons(string searchTerm)
+        public IEnumerable<Name> SearchPerson(string searchTerm)
         {
-            return _context.Names.FromSqlRaw("EXEC SearchPersons @searchTerm = {0}", searchTerm).ToList();
+            return _context.Names.FromSqlRaw("EXEC SearchPerson @searchTerm = {0}", searchTerm).ToList();
         }
     }
 }

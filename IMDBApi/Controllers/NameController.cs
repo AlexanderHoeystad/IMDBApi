@@ -67,9 +67,9 @@ namespace IMDBApi.Controllers
         }
 
         [HttpGet("search")]
-        public ActionResult<IEnumerable<Name>> SearchPersons(string searchTerm)
+        public ActionResult<IEnumerable<Name>> SearchPerson(string searchTerm)
         {
-            var results = _nameRepo.SearchPersons(searchTerm);
+            var results = _nameRepo.SearchPerson(searchTerm);
             return Ok(results);
         }
 
