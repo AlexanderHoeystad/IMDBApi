@@ -49,8 +49,6 @@
                     "StartYear" => _context.Titles.OrderBy(t => t.StartYear),
                     "EndYear" => _context.Titles.OrderBy(t => t.EndYear),
                     "RuntimeMinutes" => _context.Titles.OrderBy(t => t.RuntimeMinutes),
-                    "GenreID" => _context.Titles.OrderBy(t => t.GenreID),
-                    "Genre" => _context.Titles.OrderBy(t => t.Genre),
                     _ => _context.Titles
                 };
             }
@@ -68,8 +66,6 @@
                 existingTitle.StartYear = title.StartYear;
                 existingTitle.EndYear = title.EndYear;
                 existingTitle.RuntimeMinutes = title.RuntimeMinutes;
-                existingTitle.GenreID = title.GenreID;
-                existingTitle.Genre = title.Genre;
                 _context.SaveChanges();
             }
             return existingTitle;

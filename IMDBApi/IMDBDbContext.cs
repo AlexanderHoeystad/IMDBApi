@@ -1,12 +1,27 @@
-﻿using IMDBApi;
+﻿using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
-using System;
 
-public class IMDBDbContext : DbContext
+namespace IMDBApi
 {
-    public IMDBDbContext(DbContextOptions<IMDBDbContext> options) : base(options) { }
-    public DbSet<Title> Titles { get; set; }
-    public DbSet<Crew> Crews { get; set; }
-    public DbSet<Name> Names { get; set; }
+    public class IMDBDbContext : DbContext
+    {
+        public IMDBDbContext(DbContextOptions<IMDBDbContext> options) : base(options) { }
+
+        public DbSet<Name> Names { get; set; } // DbSet for Names
+        public DbSet<Title> Titles { get; set; } // DbSet for Titles
+        public DbSet<Crew> Crews { get; set; } // DbSet for Crews
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Name>(entity =>
+            {
+                entity.HasKey(e => e.Nconst); // Specify primary key
+                entity.ToView("getPerson"); // Map to the Persons table
+            });
+
+            base.OnModelCreating(modelBuilder);
+        }
+    }
+
 }
 

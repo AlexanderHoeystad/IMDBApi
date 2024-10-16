@@ -4,9 +4,9 @@ namespace IMDBApi
 {
     public class NameRepoDB : INameRepo
     {
-        private readonly ImdbContext _context;
+        private readonly IMDBDbContext _context;
 
-        public NameRepoDB(ImdbContext context)
+        public NameRepoDB(IMDBDbContext context)
         {
             _context = context;
         }
