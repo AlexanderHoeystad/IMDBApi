@@ -25,9 +25,9 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddScoped<TitleRepo>();
+builder.Services.AddScoped<TitleRepoDB>();
 builder.Services.AddScoped<NameRepo>();
-builder.Services.AddScoped<CrewRepo>();
+builder.Services.AddScoped<CrewRepoDB>();
 
 builder.Services.AddDbContext<IMDBDbContext>(options =>
 {
