@@ -1,4 +1,9 @@
 using IMDBApi;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
+
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,9 +25,14 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddSingleton<TitleRepo>();
-builder.Services.AddSingleton<NameRepo>();
-builder.Services.AddSingleton<CrewRepo>();
+builder.Services.AddScoped<TitleRepo>();
+builder.Services.AddScoped<NameRepo>();
+builder.Services.AddScoped<CrewRepo>();
+
+builder.Services.AddDbContext<IMDBDbContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("IMDBDbContext"));
+});
 
 var app = builder.Build();
 
