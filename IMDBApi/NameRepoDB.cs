@@ -83,7 +83,7 @@ namespace IMDBApi
         // Search for Names using a search term
         public IEnumerable<Name> SearchPerson(string searchTerm)
         {
-            return _context.Names.FromSqlRaw("EXEC SearchPersons @searchTerm", new SqlParameter("@searchTerm", searchTerm)).ToList();
+            return _context.Names.FromSqlRaw("EXEC SearchPerson @searchTerm", new SqlParameter("@searchTerm", searchTerm)).ToList();
         }
     }
 
