@@ -31,6 +31,7 @@ namespace IMDBApi.Controllers
 
         }
 
+
         // GET api/<TempController>/5
         [HttpGet("{tconst}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -52,11 +53,19 @@ namespace IMDBApi.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public ActionResult<Title> Post([FromBody] Title title)
         {
+            // Check if the model state is valid
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            // Call the repository to add the title
             var newTitle = _titleRepo.AddTitle(title);
+
+            // Return a 201 Created response with the location of the new resource
             return CreatedAtAction(nameof(Get), new { tconst = newTitle.Tconst }, newTitle);
-
-
         }
+
 
         // PUT api/<TempController>/5
         [HttpPut("{tconst}")]

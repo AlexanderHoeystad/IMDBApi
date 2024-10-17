@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 
 namespace IMDBApi
 {
@@ -13,10 +14,32 @@ namespace IMDBApi
 
         public Title AddTitle(Title title)
         {
-            _context.Titles.Add(title);
-            _context.SaveChanges();
-            return title;
+            // Create parameters for the stored procedure
+            var nconstParam = new SqlParameter("@nconst", title.Tconst);
+            var titleTypeParam = new SqlParameter("@titleType", title.TitleType);
+            var primaryTitleParam = new SqlParameter("@primaryTitle", title.PrimaryTitle);
+            var originalTitleParam = new SqlParameter("@originalTitle", title.OriginalTitle);
+            var isAdultParam = new SqlParameter("@isAdult", title.IsAdult);
+            var startYearParam = new SqlParameter("@startYear", title.StartYear);
+            var endYearParam = new SqlParameter("@endYear", title.EndYear);
+            var runtimeMinutesParam = new SqlParameter("@runTimeMinutes", title.RuntimeMinutes);
+
+            // Execute the stored procedure
+            _context.Database.ExecuteSqlRaw(
+                "EXEC dbo.AddMovie @nconst, @titleType, @primaryTitle, @originalTitle, @isAdult, @startYear, @endYear, @runTimeMinutes",
+                nconstParam,
+                titleTypeParam,
+                primaryTitleParam,
+                originalTitleParam,
+                isAdultParam,
+                startYearParam,
+                endYearParam,
+                runtimeMinutesParam
+            );
+
+            return title; // Return the title object or any other result as needed
         }
+
 
         public Title? Delete(string tconst)
         {
