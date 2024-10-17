@@ -6,7 +6,7 @@ namespace IMDBApi
         Title AddTitle(Title title);
         Title? Delete(string tconst);
         Title? GetTitle(string tconst);
-        IEnumerable<Title> GetTitleList(string? orderby = null);
+        IEnumerable<Title> GetTitleList();
         Title? UpdateTitle(string tconst, Title title);
 
         IEnumerable<Title> SearchTitle(string searchTerm);

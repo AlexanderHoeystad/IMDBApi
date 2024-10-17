@@ -19,9 +19,9 @@ namespace IMDBApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult<IEnumerable<Title>> GetAll([FromQuery] string? orderBy = null)
+        public ActionResult<IEnumerable<Title>> GetAll()
         {
-            var titles = _titleRepo.GetTitleList(orderBy);
+            var titles = _titleRepo.GetTitleList();
             if (titles == null)
             {
                 return NoContent();

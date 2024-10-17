@@ -34,26 +34,9 @@ namespace IMDBApi
             return _context.Titles.Find(tconst);
         }
 
-        public IEnumerable<Title> GetTitleList(string? orderby = null)
+        public IEnumerable<Title> GetTitleList()
         {
-            if (orderby == null)
-            {
-                return _context.Titles;
-            }
-            else
-            {
-                return orderby switch
-                {
-                    "TitleType" => _context.Titles.OrderBy(t => t.TitleType),
-                    "PrimaryTitle" => _context.Titles.OrderBy(t => t.PrimaryTitle),
-                    "OriginalTitle" => _context.Titles.OrderBy(t => t.OriginalTitle),
-                    "IsAdult" => _context.Titles.OrderBy(t => t.IsAdult),
-                    "StartYear" => _context.Titles.OrderBy(t => t.StartYear),
-                    "EndYear" => _context.Titles.OrderBy(t => t.EndYear),
-                    "RuntimeMinutes" => _context.Titles.OrderBy(t => t.RuntimeMinutes),
-                    _ => _context.Titles
-                };
-            }
+            return _context.Titles.FromSqlRaw("EXEC GetTitlesSP").ToList();
         }
 
         public Title? UpdateTitle(string tconst, Title title)

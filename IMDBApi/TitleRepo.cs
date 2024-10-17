@@ -14,36 +14,36 @@ namespace IMDBApi
               new Title {Tconst = "tt0000005", TitleType = "movie", PrimaryTitle = "Titanic", OriginalTitle = "Titanic", IsAdult = false, StartYear = 1997, EndYear = null, RuntimeMinutes = 195}
         };
 
-        public IEnumerable<Title> GetTitleList(string? orderby = null)
+        public IEnumerable<Title> GetTitleList()
         {
             IEnumerable<Title> result = new List<Title>(_titles);
-            if (orderby != null)
-            {
-                switch (orderby)
-                {
-                    case "TitleType":
-                        result = result.OrderBy(t => t.TitleType);
-                        break;
-                    case "PrimaryTitle":
-                        result = result.OrderBy(t => t.PrimaryTitle);
-                        break;
-                    case "OriginalTitle":
-                        result = result.OrderBy(t => t.OriginalTitle);
-                        break;
-                    case "StartYear":
-                        result = result.OrderBy(t => t.StartYear);
-                        break;
-                    case "EndYear":
-                        result = result.OrderBy(t => t.EndYear);
-                        break;
-                    case "RuntimeMinutes":
-                        result = result.OrderBy(t => t.RuntimeMinutes);
-                        break;
-                    default:
-                        break;
-                }
+            //if (orderby != null)
+            //{
+            //    switch (orderby)
+            //    {
+            //        case "TitleType":
+            //            result = result.OrderBy(t => t.TitleType);
+            //            break;
+            //        case "PrimaryTitle":
+            //            result = result.OrderBy(t => t.PrimaryTitle);
+            //            break;
+            //        case "OriginalTitle":
+            //            result = result.OrderBy(t => t.OriginalTitle);
+            //            break;
+            //        case "StartYear":
+            //            result = result.OrderBy(t => t.StartYear);
+            //            break;
+            //        case "EndYear":
+            //            result = result.OrderBy(t => t.EndYear);
+            //            break;
+            //        case "RuntimeMinutes":
+            //            result = result.OrderBy(t => t.RuntimeMinutes);
+            //            break;
+            //        default:
+            //            break;
+            //    }
 
-            }
+            //}
             return result;
         }
 
