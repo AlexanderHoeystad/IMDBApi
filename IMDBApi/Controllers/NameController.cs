@@ -24,9 +24,9 @@ namespace IMDBApi.Controllers
 
         // GET: api/names/{nconst}
         [HttpGet("{nconst}")]
-        public ActionResult<Name> GetName(string nconst)
+        public ActionResult<Name> GetPerson(string nconst)
         {
-            var name = _nameRepo.GetName(nconst);
+            var name = _nameRepo.GetPerson(nconst);
             if (name == null)
             {
                 return NotFound(); // Return 404 if not found
@@ -36,17 +36,36 @@ namespace IMDBApi.Controllers
 
         // POST: api/names
         [HttpPost]
-        public ActionResult<Name> CreateName(Name name)
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public ActionResult<Name> AddPerson(Name name)
         {
-            var createdName = _nameRepo.AddName(name);
-            return CreatedAtAction(nameof(GetName), new { nconst = createdName.Nconst }, createdName);
+            // Validate the model
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState); // Return 400 Bad Request if the model is invalid
+            }
+
+            try
+            {
+                var createdName = _nameRepo.AddPerson(name); // Call to repository to add the name
+                return CreatedAtAction(nameof(GetPerson), new { nconst = createdName.Nconst }, createdName); // Return 201 Created
+            }
+            catch (Exception ex)
+            {
+                // Log the exception (optional, depending on your logging setup)
+                // _logger.LogError(ex, "An error occurred while creating a name.");
+
+                return StatusCode(500, "Internal server error"); // Return 500 Internal Server Error if something goes wrong
+            }
         }
+
 
         // PUT: api/names/{nconst}
         [HttpPut("{nconst}")]
         public ActionResult<Name> UpdateName(string nconst, Name name)
         {
-            var updatedName = _nameRepo.UpdateName(nconst, name);
+            var updatedName = _nameRepo.UpdatePerson(nconst, name);
             if (updatedName == null)
             {
                 return BadRequest(); // Return 400 if Nconst doesn't match
@@ -58,7 +77,7 @@ namespace IMDBApi.Controllers
         [HttpDelete("{nconst}")]
         public ActionResult<Name> DeleteName(string nconst)
         {
-            var deletedName = _nameRepo.Delete(nconst);
+            var deletedName = _nameRepo.DeletePerson(nconst);
             if (deletedName == null)
             {
                 return NotFound(); // Return 404 if not found

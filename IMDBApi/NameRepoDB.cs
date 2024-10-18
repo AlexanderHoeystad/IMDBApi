@@ -15,26 +15,30 @@ namespace IMDBApi
         }
 
         // Get a list of Names with optional ordering
-        public IEnumerable<Name> GetNameList(string? orderby = null)
+        public IEnumerable<Name> GetPersonList(string? orderby = null)
         {
             return _context.Names.FromSqlRaw("EXEC GetPersonsSP").ToList();
         }
 
         // Add a new Name - note that this assumes you have an appropriate stored procedure
-        public Name AddName(Name name)
+        public Name AddPerson(Name name)
         {
             // Call stored procedure to add a name
-            _context.Database.ExecuteSqlRaw("EXEC AddPerson @Nconst, @PrimaryName, @BirthYear, @DeathYear",
+            _context.Database.ExecuteSqlRaw("EXEC AddPerson @Nconst, @PrimaryName, @BirthYear, @DeathYear, @PrimaryProfession, @KnownForTitles",
                 new SqlParameter("@Nconst", name.Nconst),
                 new SqlParameter("@PrimaryName", name.PrimaryName),
                 new SqlParameter("@BirthYear", name.BirthYear ?? (object)DBNull.Value),
-                new SqlParameter("@DeathYear", name.DeathYear ?? (object)DBNull.Value));
+                new SqlParameter("@DeathYear", name.DeathYear.HasValue ? (object)name.DeathYear.Value : DBNull.Value), // Ensure DeathYear is nullable
+                new SqlParameter("@PrimaryProfession", name.PrimaryProfession ?? (object)DBNull.Value), // Handle PrimaryProfession
+                new SqlParameter("@KnownForTitles", name.KnownForTitles ?? (object)DBNull.Value) // Handle KnownForTitles
+            );
 
             return name; // Return the created name
         }
 
+
         // Get a specific Name by Nconst
-        public Name? GetName(string nconst)
+        public Name? GetPerson(string nconst)
         {
             return _context.Names
                 .FromSqlRaw("EXEC GetNameByNconst @Nconst", new SqlParameter("@Nconst", nconst))
@@ -44,7 +48,7 @@ namespace IMDBApi
 
 
         // Update an existing Name
-        public Name? UpdateName(string nconst, Name name)
+        public Name? UpdatePerson(string nconst, Name name)
         {
             // Call stored procedure to update the name
             _context.Database.ExecuteSqlRaw("EXEC UpdatePerson @Nconst, @PrimaryName, @BirthYear, @DeathYear",
@@ -57,9 +61,9 @@ namespace IMDBApi
         }
 
         // Delete a Name by Nconst
-        public Name? Delete(string nconst)
+        public Name? DeletePerson(string nconst)
         {
-            var name = GetName(nconst); // Get the existing name before deleting
+            var name = GetPerson(nconst); // Get the existing name before deleting
             if (name != null)
             {
                 // Call stored procedure to delete the name
