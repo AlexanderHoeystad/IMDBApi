@@ -3,7 +3,7 @@ namespace IMDBApi
 {
     public interface INameRepo
     {
-        IEnumerable<Name> GetPersonList(string? orderby = null);
+        IEnumerable<Name> GetPersonsList(string? orderby = null);
         Name AddPerson(Name name);
         Name? DeletePerson(string nconst);
         Name? GetPerson(string nconst);

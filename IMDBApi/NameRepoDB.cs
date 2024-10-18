@@ -15,7 +15,7 @@ namespace IMDBApi
         }
 
         // Get a list of Names with optional ordering
-        public IEnumerable<Name> GetPersonList(string? orderby = null)
+        public IEnumerable<Name> GetPersonsList(string? orderby = null)
         {
             return _context.Names.FromSqlRaw("EXEC GetPersonsSP").ToList();
         }

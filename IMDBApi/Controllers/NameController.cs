@@ -18,7 +18,7 @@ namespace IMDBApi.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<Name>> GetPersons(string? orderby = null)
         {
-            var names = _nameRepo.GetPersonList(orderby);
+            var names = _nameRepo.GetPersonsList(orderby);
             return Ok(names);
         }
 
