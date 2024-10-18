@@ -21,12 +21,15 @@ namespace IMDBApi
             var originalTitleParam = new SqlParameter("@originalTitle", title.OriginalTitle);
             var isAdultParam = new SqlParameter("@isAdult", title.IsAdult);
             var startYearParam = new SqlParameter("@startYear", title.StartYear);
-            var endYearParam = new SqlParameter("@endYear", title.EndYear);
-            var runtimeMinutesParam = new SqlParameter("@runTimeMinutes", title.RuntimeMinutes);
+            var endYearParam = new SqlParameter("@endYear", (object)title.EndYear ?? DBNull.Value); // handle null
+            var runtimeMinutesParam = new SqlParameter("@runTimeMinutes", (object)title.RuntimeMinutes ?? DBNull.Value); // handle null
 
-            // Execute the stored procedure
+            // Assume title.Genres is a comma-separated string, like "Action, Drama"
+            var genresParam = new SqlParameter("@genres", title.Genres ?? string.Empty); // Pass empty string if null
+
+            // Execute the stored procedure with genres
             _context.Database.ExecuteSqlRaw(
-                "EXEC dbo.AddMovie @nconst, @titleType, @primaryTitle, @originalTitle, @isAdult, @startYear, @endYear, @runTimeMinutes",
+                "EXEC dbo.AddMovie @nconst, @titleType, @primaryTitle, @originalTitle, @isAdult, @startYear, @endYear, @runTimeMinutes, @genres",
                 nconstParam,
                 titleTypeParam,
                 primaryTitleParam,
@@ -34,11 +37,13 @@ namespace IMDBApi
                 isAdultParam,
                 startYearParam,
                 endYearParam,
-                runtimeMinutesParam
+                runtimeMinutesParam,
+                genresParam // Add the genres parameter
             );
 
             return title; // Return the title object or any other result as needed
         }
+
 
 
         public Title? Delete(string tconst)
