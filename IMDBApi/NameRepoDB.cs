@@ -17,19 +17,7 @@ namespace IMDBApi
         // Get a list of Names with optional ordering
         public IEnumerable<Name> GetNameList(string? orderby = null)
         {
-            var query = _context.Names.AsQueryable();
-
-            // Apply ordering if specified
-            if (!string.IsNullOrEmpty(orderby))
-            {
-                query = orderby switch
-                {
-                    "name" => query.OrderBy(n => n.PrimaryName),
-                    _ => query
-                };
-            }
-
-            return query.ToList();
+            return _context.Names.FromSqlRaw("EXEC GetPersonsSP").ToList();
         }
 
         // Add a new Name - note that this assumes you have an appropriate stored procedure
