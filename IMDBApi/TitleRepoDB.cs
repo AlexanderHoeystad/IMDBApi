@@ -48,19 +48,23 @@ namespace IMDBApi
 
         public Title? Delete(string tconst)
         {
-            var title = GetTitle(tconst);
+            var title = GetTitle(tconst); // Retrieve the title before deleting
             if (title != null)
             {
-                _context.Titles.Remove(title);
-                _context.SaveChanges();
+                // Execute stored procedure to delete the title
+                _context.Database.ExecuteSqlRaw("EXEC DeleteTitle @Tconst", new SqlParameter("@Tconst", tconst));
             }
-            return title;
+            return title; // Return the deleted title or null if not found
         }
 
         public Title? GetTitle(string tconst)
         {
-            return _context.Titles.Find(tconst);
+            return _context.Titles
+                .FromSqlRaw("EXEC GetTitleByTconst @Tconst", new SqlParameter("@Tconst", tconst))
+                .AsEnumerable()
+                .FirstOrDefault();
         }
+
 
         public IEnumerable<Title> GetTitleList()
         {
