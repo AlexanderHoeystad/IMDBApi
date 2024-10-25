@@ -73,20 +73,23 @@ namespace IMDBApi
 
         public Title? UpdateTitle(string tconst, Title title)
         {
-            var existingTitle = GetTitle(tconst);
-            if (existingTitle != null)
-            {
-                existingTitle.TitleType = title.TitleType;
-                existingTitle.PrimaryTitle = title.PrimaryTitle;
-                existingTitle.OriginalTitle = title.OriginalTitle;
-                existingTitle.IsAdult = title.IsAdult;
-                existingTitle.StartYear = title.StartYear;
-                existingTitle.EndYear = title.EndYear;
-                existingTitle.RuntimeMinutes = title.RuntimeMinutes;
-                _context.SaveChanges();
-            }
-            return existingTitle;
+            // Call stored procedure to update the title with nullable values
+            _context.Database.ExecuteSqlRaw(
+                "EXEC UpdateTitle @Tconst, @TitleType, @PrimaryTitle, @OriginalTitle, @IsAdult, @StartYear, @EndYear, @RuntimeMinutes, @Genres",
+                new SqlParameter("@Tconst", tconst),
+                new SqlParameter("@TitleType", (object?)title.TitleType ?? DBNull.Value),
+                new SqlParameter("@PrimaryTitle", (object?)title.PrimaryTitle ?? DBNull.Value),
+                new SqlParameter("@OriginalTitle", (object?)title.OriginalTitle ?? DBNull.Value),
+                new SqlParameter("@IsAdult", (object?)title.IsAdult ?? DBNull.Value),
+                new SqlParameter("@StartYear", (object?)title.StartYear ?? DBNull.Value),
+                new SqlParameter("@EndYear", (object?)title.EndYear ?? DBNull.Value),
+                new SqlParameter("@RuntimeMinutes", (object?)title.RuntimeMinutes ?? DBNull.Value),
+                new SqlParameter("@Genres", (object?)title.Genres ?? DBNull.Value) // Set DBNull if Genres is null
+            );
+
+            return title; // Return updated title
         }
+
 
         public IEnumerable<Title> SearchTitle(string searchTerm)
         {
